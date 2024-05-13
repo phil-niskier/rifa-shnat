@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import random
+import time
+import base64
 
 # Exibe uma imagem
 def exibir_imagem(path_imagem):
@@ -22,7 +24,9 @@ def carregar_dados(caminho_csv):
     # Remover linhas nulas apenas nas colunas "Nome" e "Quantidade de Rifas"
     dados_csv = dados_csv.dropna(subset=['Nome', 'Quantidade de Rifas'])
     # Convertendo a coluna 'Quantidade de Rifas' para int
-    dados_csv['Quantidade de Rifas'] = dados_csv['Quantidade de Rifas'].str.split(',').str[0].astype(int)
+    dados_csv['Quantidade de Rifas'] = dados_csv['Quantidade de Rifas'].astype(str)
+    dados_csv['Quantidade de Rifas'] = dados_csv['Quantidade de Rifas'].str.split('.').str[0]
+    dados_csv['Quantidade de Rifas'] = dados_csv['Quantidade de Rifas'].astype(int)
     dados_csv = dados_csv[dados_csv['Quantidade de Rifas']>0]
     dados_csv = dados_csv[dados_csv['Nome'] != 'teste']
     dados_csv = dados_csv[dados_csv['Nome'] != 'Teste']
@@ -75,14 +79,32 @@ def exibir_tabela_nomes_duplicados(dados_duplicados):
 # Sortear um vencedor
 def sortear_vencedor(dados_duplicados):
     if st.button('Sortear Vencedor'):
-        lista_nomes = dados_duplicados['Nome'].tolist()
-        vencedor = random.choice(lista_nomes)
+        with st.spinner('Sorteando...'):
+            time.sleep(2)
+            st.text('Embaralhando os nomes...')
+            time.sleep(2)
+            st.text('Encontrando Vencedor...')
+            time.sleep(2)
+            lista_nomes = dados_duplicados['Nome'].tolist()
+            vencedor = random.choice(lista_nomes)
         return vencedor
+
+# Tocar um som de fundo de vitoria
+def tocar_som(caminho_som):
+    audio_file = open(caminho_som, 'rb')
+    audio_bytes = audio_file.read()    
+    # Exibir o arquivo de áudio sem controles e com autoplay
+    encoded_audio = base64.b64encode(audio_bytes).decode('utf-8')
+    # Exibir o arquivo de áudio sem controles e com autoplay usando HTML
+    st.markdown(f'<audio src="data:audio/mp3;base64,{encoded_audio}" autoplay >', unsafe_allow_html=True)
 
 # Exibe um vencedor
 def exibir_vencedor(vencedor):
     if vencedor is not None:
-        st.success(vencedor)
+        st.markdown(f'<p style="font-size:30px; color:green;">O vencedor é:</p>', unsafe_allow_html=True)
+        st.markdown(f'<p style="font-size:30px; color:green;">{vencedor}</p>', unsafe_allow_html=True)
+        exibir_imagem('macaco.gif')
+        tocar_som('trompete.mp3')
 
 # Recebe o arquivo csv através do upload
 def receber_arquivo():
@@ -99,15 +121,7 @@ def receber_arquivo():
     else:
         st.info('Voce precisa carregar uma planilha')
 
-    #se não tiverem as colunas nome e quantidade
-
-# Ao botao clicado sortear de fato uma pessoa da lista dupçlicada 
-
-# Exibir o vencedor abaixo do botao com fonte grande e verde 
-
-# Exibir uma imagem abaixo do nome 
-
-# Tocar um som de fundo de vitoria
+#Ainda falta sortear os premios para cada em ordem
 
 #CHAMAR AS FUNÇÕES
 exibir_imagem('chazi.png')
