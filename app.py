@@ -98,6 +98,10 @@ def tocar_som(caminho_som):
     # Exibir o arquivo de áudio sem controles e com autoplay usando HTML
     st.markdown(f'<audio src="data:audio/mp3;base64,{encoded_audio}" autoplay >', unsafe_allow_html=True)
 
+# Exibe mensagem
+def exibir_mensagem(string):
+    st.text(string)
+
 # Exibe um vencedor
 def exibir_vencedor(vencedor):
     if vencedor is not None:
@@ -105,6 +109,7 @@ def exibir_vencedor(vencedor):
         st.markdown(f'<p style="font-size:30px; color:green;">{vencedor}</p>', unsafe_allow_html=True)
         exibir_imagem('macaco.gif')
         tocar_som('trompete.mp3')
+        exibir_mensagem('chazak ve ale')
 
 # Recebe o arquivo csv através do upload
 def receber_arquivo():
