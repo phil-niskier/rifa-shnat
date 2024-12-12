@@ -148,7 +148,7 @@ def receber_arquivo():
         exibir_tabela_nomes_quantidades(dados)
         dados_duplicados = multiplicar_linhas(dados)
         exibir_tabela_nomes_duplicados(dados_duplicados)
-        itens = ['Vale Gurume', 'Kit Dermage', 'Vinho Viña Eden', 'Consulta KamiNutri', 'Cesta myBrownies']
+        itens = ['Vale de 300 reais Gurume', 'Kit Dermage', 'Vinho Viña Eden', 'Consulta KamiNutri', 'Cesta myBrownies']
         sortear_multiplos_vencedores(dados_duplicados, itens)
         
         
