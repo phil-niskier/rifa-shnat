@@ -6,6 +6,27 @@ import random
 import time
 import base64
 
+
+st.set_page_config(
+    page_title="Mega Rifa Shnat",
+    page_icon="✡️",
+    layout="wide",  # Modo "wide"
+    initial_sidebar_state="expanded"
+)
+
+# Configuração do tema escuro via atributos de configuração
+st.markdown(
+    """
+    <style>
+    /* Força o modo escuro no Streamlit */
+    html {
+        color-scheme: dark;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # Exibe uma imagem
 def exibir_imagem(path_imagem):
     st.image(path_imagem)
@@ -74,20 +95,28 @@ def multiplicar_linhas(dados):
 def exibir_tabela_nomes_duplicados(dados_duplicados):
     exibir_subtitulo_duplicados('', dados_duplicados)
     st.write(dados_duplicados['Nome'])
-    #se não tiverem as colunas nome e quantidade
 
 # Sortear um vencedor
-def sortear_vencedor(dados_duplicados):
-    if st.button('Sortear Vencedor'):
-        with st.spinner('Sorteando...'):
+def sortear_multiplos_vencedores(dados_duplicados, itens):
+    if st.button('Sortear Vencedores'):
+        lista_nomes = dados_duplicados['Nome'].tolist()
+        with st.spinner('Preparando sorteio...'):
             time.sleep(2)
-            st.text('Embaralhando os nomes...')
-            time.sleep(2)
-            st.text('Encontrando Vencedor...')
-            time.sleep(2)
-            lista_nomes = dados_duplicados['Nome'].tolist()
-            vencedor = random.choice(lista_nomes)
-        return vencedor
+
+        for item in itens:
+            with st.spinner(f'Sorteando para o item: {item}...'):
+                time.sleep(2)
+                st.text('Embaralhando os nomes...')
+                time.sleep(2)
+                st.text(f'Sorteando o vencedor para o item {item}...')
+                time.sleep(2)
+                vencedor = random.choice(lista_nomes)
+                lista_nomes = [nome for nome in lista_nomes if nome != vencedor]
+                st.markdown(f'<p style="font-size:35px; color:lightgreen;">Item: {item} - Vencedor: {vencedor}</p>', unsafe_allow_html=True)
+
+        exibir_imagem('macaco.gif')
+        tocar_som('trompete.mp3')
+        exibir_mensagem('chazak ve ale')
 
 # Tocar um som de fundo de vitoria
 def tocar_som(caminho_som):
@@ -119,8 +148,9 @@ def receber_arquivo():
         exibir_tabela_nomes_quantidades(dados)
         dados_duplicados = multiplicar_linhas(dados)
         exibir_tabela_nomes_duplicados(dados_duplicados)
-        vencedor = sortear_vencedor(dados_duplicados)
-        exibir_vencedor(vencedor)
+        itens = ['Vale Gurume', 'Kit Dermage', 'Vinho Viña Eden', 'Consulta KamiNutri', 'Cesta myBrownies']
+        sortear_multiplos_vencedores(dados_duplicados, itens)
+        
         
 
     else:
